@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<style>
+    * {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+    .box {
+        width: 300px;
+        height: 600px;
+        background-color: black;
+        position: absolute;
+        left: 0;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        border: 1px solid black;
+    }
+    .box .top {
+        width: 300px;
+        height: 300px;
+        background-color: #fff;
+        display: block;
+        clip-path: polygon(0% 0%,100% 0,50% 100%);
+        position: relative;
+        z-index: 1;
+    }
+    .box .top::before {
+        content: '';
+        width: 290px;
+        height: 270px;
+        background-color: green;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        clip-path: polygon(0% 0%,100% 0,50% 100%);
+        animation: go 3s ease-in;
+        animation-fill-mode: forwards;
+    }
+    @keyframes go {
+        0% {height: 280px;}
+        100% {height: 0;}
+    }
+    .box .contact {
+        width:14px;
+        height: 20px;
+        position: absolute;
+        background-color: #000;
+        left:50%;
+        top:50%;
+        transform: translate(-50%,-50%);
+        z-index: 100;
+        border-radius: 6px;
+    }
+    .box .contact::before {
+        content: '';
+        width: 6px;
+        height: 6px;
+        background-color: green;
+        position: absolute;
+        left: 0;
+        right: 0;
+        margin: auto;
+        bottom: -20px;
+        box-shadow:
+            0 -40px 0 0 green,
+            0 -20px 0 0 green,
+            0 0 0 0 green, 
+            0 20px 0 0 green,
+            0 40px 0 0 green,
+            0 60px 0 0 green,
+            0 80px 0 0 green,
+            0 100px 0 0 green,
+            0 120px 0 0 green,
+            0 140px 0 0 green,
+            0 160px 0 0 green,
+            0 180px 0 0 green,
+            0 200px 0 0 green,
+            0 220px 0 0 green;
+            
+           
+
+        animation: go2 0.3s 10 ease;
+        animation-fill-mode: forwards;
+    }
+    @keyframes go2 {
+        0% {bottom: -20px;}
+        100% {bottom: -60px;}
+    }
+    .box .bottom {
+        width: 300px;
+        height: 300px;
+        background-color: #fff;
+        display: block;
+        clip-path: polygon(50% 0%,100% 100%,0% 100%);
+        position: absolute;
+        z-index: 1;
+    }
+    .box .bottom::before {
+        content: '';
+        width: 0;
+        height: 0;
+        background-color: green;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        clip-path: polygon(50% 0%,100% 100%,0% 100%);
+        animation: go1 3s ease-out;
+        animation-fill-mode: forwards;
+    }
+    @keyframes go1 {
+        0% {height: 0;width: 0;}
+        100% {height: 280px;width: 280px;}
+    }
+    
+</style>
+<body>
+    <div class="box">
+        <i class="top"></i>
+        <i class="contact"></i>
+        <i class="bottom"></i>
+    </div>
+</body>
+</html>

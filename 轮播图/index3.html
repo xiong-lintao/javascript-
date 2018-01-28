@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./index3.css">
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+    html,body {
+        width: 100%;
+        height: 100%;
+    }
+</style>
+<body>
+    <div class="box">
+    </div>
+    <script src="./index3-1.js"></script>
+    <script>
+        let box = $('.box')[0]
+        let cycle = new Cycl()
+        cycle.creatCycl({
+            el:box,
+            imgs:['imgs/1.jpg','imgs/2.jpg','imgs/3.jpg','imgs/4.jpg'],
+            data:{
+                n:0
+            }
+        })
+        function $(dom) {
+            return document.querySelectorAll(dom)
+        }  
+    </script>
+</body>
+</html>

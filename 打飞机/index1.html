@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        window.onload = function(){
+            Game.exe();
+        }
+        
+
+
+
+        var Game = {
+            exe:function(){
+                document.body.style.background = 'black';
+                var oDiv = document.createElement('div')
+                oDiv.innerHTML = ''
+                oDiv.id = 'content'
+                oDiv.style.cssText = 'position:relative;margin:30px auto;width:300px;height:500px;border:10px solid #fff;text-align:center;' 
+                document.body.appendChild(oDiv)
+                this.init()
+            },
+            sorce:0,
+            ifEnd:false,
+            init:function(){
+                Game.sorce = 0
+                Game.ifEnd = false
+                var html = ''
+                var ctn = document.getElementById('content')
+                ctn.innerHTML = ''
+                var OH = document.createElement('h1')
+                OH.innerHTML = '打飞机V1.0'
+                OH.style.cssText = 'margin：50px;color:#fff;font-size:25px;'
+                ctn.appendChild(OH)
+                for(i=0;i<4;i++)
+                {
+                    var OP = document.createElement('p')
+                    OP.index = i;
+                    OP.innerHTML = ''
+                    OP.style.cssText = 'width:150px;height:40px;font-size:14px;color:#000;margin:50px auto;background:#fff;cursor:pointer;line-height:40px'
+                    switch(i)
+                    {
+                        case 0:
+                            html = '普通难度';
+                            break;
+                        case 1:
+                            html = '有一点难';
+                            break;
+                        case 2:
+                            html = '非常的难';
+                            break;
+                        case 3:
+                            html = '林涛附体';
+                            OP.style.color = '#f00';
+                            OP.style.fontWeight = 'bold';
+                        break;
+                    }
+                    OP.onmouseenter = function(){
+                        this.style.background = '#f60'
+                        this.style.color = '#fff'
+                    }
+                    OP.onmouseleave = function(){
+                        this.style.background = '#fff'
+                        this.style.color = '#000'
+                    }
+                    OP.onclick = function(e){
+                        e = e || window.event 
+                        Game.start(ctn,e,this.index)
+                    }
+                    OP.innerHTML = html
+                    ctn.appendChild(OP)                   
+                }               
+            },
+            start:function(ctn,e,index){
+                ctn.innerHTML = ''
+                var OS = document.createElement('span')
+                OS.innerHTML = this.sorce
+                OS.id = 'sorce'
+                OS.style.cssText = 'position:absolute;top:0;left:0;padding:30px;color:#fff;font-size:14px'
+                ctn.appendChild(OS)
+                this.plane(ctn,e,index)
+                this.enemy(ctn,OS,index)
+            },
+            plane:function(ctn,e,index){
+                var startX = e.clientX
+                var startY = e.clientY
+                var plane = new Image()
+                plane.src = './img/plane.png'
+                plane.width = 60
+                plane.height = 36
+                plane.id = 'plane'
+                var lx = ctn.offsetLeft + parseInt(ctn.style.borderWidth) + plane.width/2
+                var ty = ctn.offsetTop + parseInt(ctn.style.borderWidth) + plane.height/2
+                window.onresize = function(){
+                    lx = ctn.offsetLeft + parseInt(ctn.style.borderWidth) + plane.width/2
+                }
+                var left = startX - lx
+                var top = startY - ty
+                plane.style.cssText = 'position:absolute;top:'+ top +'px;left:'+ left +'px'
+                ctn.appendChild(plane)
+                var maxLeft = ctn.clientWidth - plane.width/2
+                var minLeft = -plane.width/2
+                var maxTop = ctn.clientHeight - plane.height
+                var minTop = 0
+                document.onmousemove = function(e){
+                    e = e || window.event
+                    var firstX = e.clientX
+                    var firstY = e.clientY
+                    left = firstX - lx
+                    top = firstY - ty
+                    left = Math.min(maxLeft,left)
+                    left = Math.max(minLeft,left)
+                    top = Math.min(maxTop,top)
+                    top = Math.max(minTop,top)
+                    plane.style.left = left + 'px'
+                    plane.style.top = top + 'px' 
+                }
+                this.biubiubiu(ctn,plane,index)
+            },
+            biubiubiu:function(ctn,plane,index){
+                var speed;
+                switch(index){
+                    case 0:
+                        speed = 500;
+                        break;
+                    case 1:
+                        speed = 300;
+                        break;
+                    case 2:
+                        speed = 200;
+                        break;
+                    case 3:
+                        speed = 30;
+                        break;  
+                }
+                this.biuTimer = setInterval(function(){
+                    if(Game.ifEnd)
+                    {
+                        clearInterval(Game.biuTimer)
+                    }
+                    var Obiu = new Image()
+                    Obiu.src = './img/bullet.png'
+                    Obiu.className = 'bullet'
+                    Obiu.width = 6
+                    Obiu.height = 22
+                    var top = plane.offsetTop - 3
+                    var left = plane.offsetLeft + plane.width/2 - Obiu.width/2
+                    var minTop = -Obiu.height
+                    Obiu.style.cssText = 'position:absolute;top:'+ top +'px;left:'+ left +'px'
+                    ctn.appendChild(Obiu)
+                    Obiu.timer = setInterval(function(){
+                        Obiu.style.top = Obiu.offsetTop - 5 +'px'
+                        if(Obiu.offsetTop < minTop){
+                            clearInterval(Obiu.timer)
+                            Obiu.parentNode.removeChild(Obiu)                         
+                        }
+                    },13)
+                },speed)
+                
+            },
+            enemy:function(ctn,OS,index){
+                var speed,x
+                switch(index){
+                    case 0:
+                        x = 1;
+                        speed = 500;
+                        break;
+                    case 1:
+                        x = 2;
+                        speed = 300;
+                        break;
+                    case 2:
+                        x = 3;
+                        speed = 200;
+                        break;
+                    case 3:
+                        x = 4;
+                        speed = 30;
+                        break;  
+                }
+                this.enemyTimer = setInterval(function(){
+                    if(Game.ifEnd)
+                    {
+                        clearInterval(Game.enemyTimer)
+                    }
+                    var enemy = new Image()
+                    enemy.src = './img/enemy.png'
+                    enemy.width = 23
+                    enemy.height = 30
+                    enemy.className = 'enemy'
+                    var minLeft = 0
+                    var maxLeft = ctn.clientWidth - enemy.width
+                    var left = Math.random()*maxLeft
+                    enemy.style.cssText = 'position:absolute;top:0;left:'+ left +'px'
+                    var b = Math.random()*x + 1 
+                    enemy.timer = setInterval(function(){
+                        enemy.style.top = enemy.offsetTop + b + 'px'
+                        if(enemy.offsetTop > ctn.clientHeight || Game.ifEnd){
+                            clearInterval(enemy.timer)
+                            clearInterval(enemy.strikeObius)
+                            clearInterval(enemy.strikePlane)
+                            if(enemy.parentNode)
+                            {
+                                enemy.parentNode.removeChild(enemy)
+                            }
+                        }
+                    },13)
+                    ctn.appendChild(enemy)
+                    //敌机和子弹的碰撞检测
+                    var Obius = xiong.getClass('bullet')
+                    enemy.strikeObius =setInterval(function(){
+                        for(i=0;i<Obius.length;i++)
+                        {
+                            if(xiong.strike(enemy,Obius[i]))
+                            {
+                                Game.sorce++
+                                OS.innerHTML = Game.sorce
+                                enemy.src = './img/boom.png'
+                                clearInterval(Obius[i].timer)
+                                Obius[i].parentNode.removeChild(Obius[i])
+                                setTimeout(function(){
+                                    clearInterval(enemy.timer)
+                                    clearInterval(enemy.strikeObius)
+                                    clearInterval(enemy.strikePlane)
+                                    if(enemy.parentNode)
+                                    {
+                                        enemy.parentNode.removeChild(enemy)
+                                    }
+                                },50)
+                            }
+                        }
+                    },30)
+                    //敌机和战机的碰撞检测
+                    var plane = document.getElementById('plane')
+                    enemy.strikePlane = setInterval(function(){
+                        if(xiong.strike(enemy,plane))
+                        {
+                            clearInterval(enemy.timer)
+                            clearInterval(enemy.strikeObius)
+                            clearInterval(enemy.strikePlane)  
+                            plane.src = './img/boom2.png'
+                            enemy.src = './img/boom.png'
+                            Game.ifEnd = true
+                           setTimeout(function(){
+                                Game.over(ctn) 
+                           },50)  
+                        }
+                    },30)                  
+                },speed)                
+            },
+            over:function(ctn){
+                ctn.innerHTML = ''
+                var oDiv = document.createElement('div');
+                oDiv.style.cssText = 'width:200px;height:400px;margin:50px;background:#fff;';
+                var oT = document.createElement('h3');
+                    oT.innerHTML = 'Game Over';
+                    oT.style.cssText = 'padding-top:50px;;'
+                var oP1 = document.createElement('p');
+                    oP1.innerHTML = '您的得分是：' + '<span style="color:#f00;font-weight:bold;">' + this.sorce + '</span>';
+                    oP1.style.cssText = 'font-size:16px;color:#000';
+                
+                var oRestart = document.createElement('div');
+                    oRestart.style.cssText = 'width:100px;height:40px;font-size:14px;text-align:center;line-height:40px;color:#000;background:#990;margin:20px auto;cursor:pointer;';
+                    oRestart.innerHTML = '重新开始';
+                oRestart.onclick = function(){
+                    Game.init()
+                }
+                oDiv.appendChild( oT );
+                oDiv.appendChild( oP1 );
+                oDiv.appendChild( oRestart );
+                ctn.appendChild( oDiv );
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+        var xiong = {
+            getClass:function(obj,parent){
+                parent = parent || document
+                if( document.getElementsByClassName)
+                {
+                    return parent.getElementsByClassName(obj)
+                }
+                else
+                {
+                    var doms = parent.getElementsByTagName('*')
+                    var getDom = []
+                    for(i=0;i<doms.length;i++)
+                    {
+                        var clsNames = doms[i].className
+                        var arr = clsNames.split(' ')
+                        for(j=0;j<arr.length;j++)
+                        {
+                            if(arr[j]==obj)
+                            {
+                                getDom.push(doms[i])
+                            }
+                        }
+                    }
+                    return getDom
+                }
+                
+            },
+            strike: function( obj1 , obj2 ){
+                
+                var T1 = obj1.offsetTop;
+                var B1 = T1 + obj1.clientHeight;
+                var L1 = obj1.offsetLeft;
+                var R1 = L1 + obj1.clientWidth;
+
+                var T2 = obj2.offsetTop;
+                var B2 = T2 + obj2.clientHeight;
+                var L2 = obj2.offsetLeft;
+                var R2 = L2 + obj2.clientWidth;
+
+                if ( R2 < L1 || L2 > R1 || B2 < T1 || T2 > B1 )
+                {
+                    return false; // 没撞上
+                }
+                else
+                {
+                    return true; // 撞上了
+                }
+            },
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        box-sizing: border-box;
+    }
+    .box {
+        width:300px;
+        height: 500px;
+        background-color: greenyellow;
+        position: absolute;
+        left:0;
+        right:0;
+        top:0;
+        bottom: 0;
+        margin: auto; 
+    }
+</style>
+<body>
+    <div class="box">
+    </div>
+
+
+    <script src="./table.js"></script>
+    <script>
+        let box = document.querySelectorAll('.box')[0]
+        let table = new Table()
+        table.createTable({
+            el:box,
+            data:{
+                raw:4,
+                col:7
+            }
+        })
+    </script>
+</body>
+</html>
